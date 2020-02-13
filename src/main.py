@@ -64,7 +64,6 @@ def draw_ellipse(pt_2d, cov_2d, ax=None, **kwargs):
         ax.plot([pt_2d[0]], [pt_2d[1]], "o", color='red', markersize=10)
         ax.plot(px, py, "--g")
 
-
 def set_bn_to_eval(layer):
     if type(layer) == nn.modules.batchnorm.BatchNorm2d:
         # print(type(layer))
@@ -74,26 +73,6 @@ def set_dropout_to_train(layer):
     if type(layer) == nn.modules.dropout.Dropout:
         #print(type(layer))
         layer.training = True
-
-def uncertainty_scatter(model, input_var, heat_thresh, ax):
-
-    # model.train()
-    # model.apply(set_bn_to_eval)
-
-    T = 100
-    kps_list = []
-
-    """do sampling"""
-    for i in range(T):
-        output = model(input_var)
-        hm = output[-1].data.cpu().numpy()
-
-        ps = parseHeatmap(hm[0], heat_thresh)
-        kp_num = len(ps[0])
-
-        for k in range(kp_num):
-            kp = [ps[1][k] * 4, ps[0][k] * 4]
-            ax.plot([kp[0]], [kp[1]], "o", color='red', markersize=5)
 
 def draw_ellipse(position, covariance, ax=None, **kwargs):
     """
@@ -123,17 +102,17 @@ def draw_ellipse(position, covariance, ax=None, **kwargs):
 
     ax.scatter(position[0], position[1], c="red", s=50, zorder=2)
 
-# def plot_ellipses(means, covars, ax, weights):
-#     eig_vals, eig_vecs = np.linalg.eigh(covars)
-#     unit_eig_vec = eig_vecs / np.linalg.norm(eig_vecs)
-#     angle = np.arctan2(unit_eig_vec[1], unit_eig_vec[0])
-#     # Ellipse needs degrees
-#     angle = 180 * angle / np.pi
-#     # eigenvector normalization
-#     eig_vals = 2 * np.sqrt(2) * np.sqrt(eig_vals)
-#     ax.add_patch(Ellipse(means, eig_vals[0], eig_vals[1],
-#                               180 + angle, edgecolor='b',
-#                               lw=4, fill=True, alpha=weights))
+def plot_ellipses(means, covars, ax, weights):
+    eig_vals, eig_vecs = np.linalg.eigh(covars)
+    unit_eig_vec = eig_vecs / np.linalg.norm(eig_vecs)
+    angle = np.arctan2(unit_eig_vec[1], unit_eig_vec[0])
+    # Ellipse needs degrees
+    angle = 180 * angle / np.pi
+    # eigenvector normalization
+    eig_vals = 2 * np.sqrt(2) * np.sqrt(eig_vals)
+    ax.add_patch(Ellipse(means, eig_vals[0], eig_vals[1],
+                              180 + angle, edgecolor='b',
+                              lw=4, fill=True, alpha=weights))
 
 def plot_gmm(gmm, X, label=True, ax=None):
 
@@ -220,7 +199,7 @@ def uncertainty_test(model, input_var, heat_thresh, ax):
                                             init_params='kmeans',
                                             mean_precision_prior=1,
                                             weight_concentration_prior=None).fit(all_kps)
-    plot_gmm(dpgmm, all_kps, ax)
+    # plot_gmm(dpgmm, all_kps, ax)
 
     # print("debug: cov {}".format(dpgmm.covariances_))
     # print("debug: gmm {}".format(gmm_component_num))

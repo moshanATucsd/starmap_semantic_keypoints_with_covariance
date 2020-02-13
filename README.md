@@ -1,4 +1,8 @@
-## how to run 
+## Readme 
+
+This repo demonstrates how to compute the covariances using MC dropout for the semantic keypoints in OrcVIO. 
+
+### how to run 
 
 * modify the path 
 
@@ -19,7 +23,7 @@ python src/main.py
 
 ![img](/assets/sample_output.png)
 
-# modifications to make it work with python 3
+### modifications to make it work with python 3
 
 * modify pytorch
 
