@@ -264,7 +264,7 @@ def main():
     
     # set nms threshold
     # heat_thresh = 0.25
-    heat_thresh = 0.15
+    heat_thresh = 0.05
 
     ps = parseHeatmap(hm[0], heat_thresh)
     canonical, pred, color, score = [], [], [], []
