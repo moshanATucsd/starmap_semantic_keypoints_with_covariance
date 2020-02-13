@@ -14,3 +14,7 @@
 ```
 python src/main.py
 ```
+
+* sample output 
+
+![img](/assets/sample_output.png)
