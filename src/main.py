@@ -263,8 +263,7 @@ def main():
     # select peaks and perform nms
     
     # set nms threshold
-    # heat_thresh = 0.25
-    heat_thresh = 0.05
+    heat_thresh = 0.25
 
     ps = parseHeatmap(hm[0], heat_thresh)
     canonical, pred, color, score = [], [], [], []
