@@ -164,7 +164,7 @@ def uncertainty_test(model, input_var, heat_thresh, ax):
     model.train()
     model.apply(set_dropout_to_train)
 
-    T = 500
+    T = 100
 
     all_kps = None
     gmm_component_num = 0
@@ -261,7 +261,11 @@ def main():
     star = (trans * star + (1. - trans) * img).astype(np.uint8)
     
     # select peaks and perform nms
-    heat_thresh = 0.25
+    
+    # set nms threshold
+    # heat_thresh = 0.25
+    heat_thresh = 0.15
+
     ps = parseHeatmap(hm[0], heat_thresh)
     canonical, pred, color, score = [], [], [], []
 
