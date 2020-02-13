@@ -199,7 +199,7 @@ def uncertainty_test(model, input_var, heat_thresh, ax):
                                             init_params='kmeans',
                                             mean_precision_prior=1,
                                             weight_concentration_prior=None).fit(all_kps)
-    # plot_gmm(dpgmm, all_kps, ax)
+    plot_gmm(dpgmm, all_kps, ax)
 
     # print("debug: cov {}".format(dpgmm.covariances_))
     # print("debug: gmm {}".format(gmm_component_num))
@@ -242,9 +242,6 @@ def main():
 
     output = model(input_var)
     hm = output[-1].data.cpu().numpy()
-
-    # init contains some plotting stuff
-    debugger = Debugger()
 
     # convert to bgr, uint8 for display
     img = (input[0].numpy().transpose(1, 2, 0)*256).astype(np.uint8).copy()
@@ -313,12 +310,15 @@ def main():
     R, t, s = horn87(pointS.transpose(), pointT.transpose(), score)
     
     rotated_pred = s * np.dot(R, canonical.transpose()).transpose() + t * outputRes
-    # inp is input img
-    debugger.addImg(inp, 'inp')
-    # star is heatmap
-    debugger.addImg(star, 'star')
-    # nms is kp peask
-    debugger.addImg(img, 'nms')
+
+    # # init contains some plotting stuff
+    # debugger = Debugger()
+    # # inp is input img
+    # debugger.addImg(inp, 'inp')
+    # # star is heatmap
+    # debugger.addImg(star, 'star')
+    # # nms is kp peask
+    # debugger.addImg(img, 'nms')
     
     # debugger.addPoint3D(canonical / outputRes - 0.5, c = color, marker = '^')
     # debugger.addPoint3D(pred / outputRes - 0.5, c = color, marker = 'x')
