@@ -153,7 +153,7 @@ def plot_gmm(gmm, X, label=True, ax=None):
     for pos, covar, w in zip(gmm.means_, gmm.covariances_, gmm.weights_):
         #prune redundant component
         clust_id = gmm.predict(np.reshape(pos, (1, -1)))
-        print("INFO: cluster id: {}".format(clust_id))
+        # print("INFO: cluster id: {}".format(clust_id))
         cluster_samples = np.where(labels == clust_id)[0]
         cluster_num = len(cluster_samples)
         #w_factor = 1 / gmm.weights_.max()
@@ -317,12 +317,12 @@ def main():
         # covar = kps_cov[k]
         # draw_ellipse(pos, covar, ax1)
 
-    plt.show()
     plt.axis('off')
     ax1.get_xaxis().set_visible(False)
     ax1.get_yaxis().set_visible(False)
+    plt.show()
     f1.savefig('kp_cov.png', bbox_inches='tight', pad_inches = 0)
-    plt.pause(5)
+    # plt.pause(5)
 
     pred = np.array(pred).astype(np.float32)
     canonical = np.array(canonical).astype(np.float32)
@@ -348,7 +348,7 @@ def main():
     # debugger.showAllImg(pause = False)
     # debugger.show3D()
 
-    cv2.imwrite(det_name, img)
+    # cv2.imwrite(det_name, img)
 
 if __name__ == '__main__':
     main()
