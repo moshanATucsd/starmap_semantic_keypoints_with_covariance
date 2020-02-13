@@ -21,7 +21,7 @@ python src/main.py
 
 * sample output 
 
-![img](/assets/sample_output.png)
+![img](/assets/kp_cov.png)
 
 ### modifications to make it work with python 3
 
