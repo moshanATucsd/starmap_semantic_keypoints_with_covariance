@@ -313,9 +313,9 @@ def main():
         cv2.circle(img, (ps[1][k] * 4, ps[0][k] * 4), 2, (int(z*4), int(y*4), int(x*4)), -1)
     
         # plot cov
-        pos = kps_mean[k]
-        covar = kps_cov[k]
-        draw_ellipse(pos, covar, ax1)
+        # pos = kps_mean[k]
+        # covar = kps_cov[k]
+        # draw_ellipse(pos, covar, ax1)
 
     plt.show()
     plt.axis('off')
