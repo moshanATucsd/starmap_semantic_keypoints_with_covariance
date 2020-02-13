@@ -220,7 +220,7 @@ def uncertainty_test(model, input_var, heat_thresh, ax):
 
 def main():
 
-    root = '/home/erl/moshan/other_stuff/star_map_semantic_keypoints/'
+    root = '/home/erl/moshan/other_stuff/starmap_semantic_keypoints/'
     model_path = '/home/erl/moshan/orcvio_gamma/orcvio_gamma/pytorch_models/starmap/trained_models/no_dropout/model_cpu.pth'
     img_path = root + 'images/car2.png'
     det_name = root + 'det/car2.png'
