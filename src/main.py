@@ -1,27 +1,30 @@
 import torch
 import cv2
 import numpy as np
+import math
+
+import matplotlib as mpl
+mpl.use('TkAgg')  # or whatever other backend that you want
+import matplotlib.pyplot as plt
+from matplotlib.patches import Ellipse
+
+from sklearn.mixture import GaussianMixture
+from sklearn import mixture
+
+import torch.nn as nn
+
 from utils.img import Crop
 from utils.debugger import Debugger
 from utils.hmParser import parseHeatmap
 from utils.horn87 import horn87
 
-import torch.nn as nn
-
-import matplotlib as mpl
-mpl.use('TkAgg')  # or whatever other backend that you want
-import matplotlib.pyplot as plt
-
-import math
-from sklearn.mixture import GaussianMixture
-from sklearn import mixture
-from matplotlib.patches import Ellipse
-
 def draw_ellipse(pt_2d, cov_2d, ax=None, **kwargs):
-    """Draw an ellipse with a given position and covariance"""
+    """
+    Draw an ellipse with a given position and covariance
+    """
 
-    print("debug: pos {}".format(pt_2d))
-    print("debug: covariance {}".format(cov_2d))
+    # print("debug: pos {}".format(pt_2d))
+    # print("debug: covariance {}".format(cov_2d))
 
     eigval, eigvec = np.linalg.eig(cov_2d)
 
@@ -73,6 +76,7 @@ def set_dropout_to_train(layer):
         layer.training = True
 
 def uncertainty_scatter(model, input_var, heat_thresh, ax):
+
     # model.train()
     # model.apply(set_bn_to_eval)
 
@@ -92,7 +96,10 @@ def uncertainty_scatter(model, input_var, heat_thresh, ax):
             ax.plot([kp[0]], [kp[1]], "o", color='red', markersize=5)
 
 def draw_ellipse(position, covariance, ax=None, **kwargs):
-    """Draw an ellipse with a given position and covariance"""
+    """
+    Draw an ellipse with a given position and covariance
+    """
+
     ax = ax or plt.gca()
 
     # Convert covariance to principal axes
@@ -129,8 +136,10 @@ def draw_ellipse(position, covariance, ax=None, **kwargs):
 #                               lw=4, fill=True, alpha=weights))
 
 def plot_gmm(gmm, X, label=True, ax=None):
+
     ax = ax or plt.gca()
     labels = gmm.fit(X).predict(X)
+    
     # if label:
     #     ax.scatter(X[:, 0], X[:, 1], c=labels, s=40, cmap='viridis', zorder=2)
     # else:
@@ -140,6 +149,7 @@ def plot_gmm(gmm, X, label=True, ax=None):
     mc_dropout_trial_num = 100.0
 
     confidence_max = 0
+
     for pos, covar, w in zip(gmm.means_, gmm.covariances_, gmm.weights_):
         #prune redundant component
         clust_id = gmm.predict(np.reshape(pos, (1, -1)))
@@ -158,7 +168,7 @@ def plot_gmm(gmm, X, label=True, ax=None):
     for pos, covar, w in zip(gmm.means_, gmm.covariances_, gmm.weights_):
         #prune redundant component
         clust_id = gmm.predict(np.reshape(pos, (1, -1)))
-        print("INFO: cluster id: {}".format(clust_id))
+        # print("INFO: cluster id: {}".format(clust_id))
         cluster_samples = np.where(labels == clust_id)[0]
         cluster_num = len(cluster_samples)
         #w_factor = 1 / gmm.weights_.max()
@@ -170,18 +180,17 @@ def plot_gmm(gmm, X, label=True, ax=None):
             #draw_ellipse(pos, covar, edgecolor='b', lw=4, fill=True, alpha=w_factor*w)
             #plot_ellipses(pos, covar, ax, w_factor*w)
 
-
 def uncertainty_test(model, input_var, heat_thresh, ax):
+
     model.train()
     model.apply(set_dropout_to_train)
 
-    T = 30
-    # T = 100
+    T = 100
 
     all_kps = None
     gmm_component_num = 0
 
-    """do sampling"""
+    # do sampling
     for i in range(T):
         output = model(input_var)
         hm = output[-1].data.cpu().numpy()
@@ -203,6 +212,7 @@ def uncertainty_test(model, input_var, heat_thresh, ax):
     #exit()
 
     #gmm = GaussianMixture(n_components=gmm_component_num, covariance_type='full', random_state=42).fit(all_kps)
+    
     # Fit a Dirichlet process Gaussian mixture using five components
     dpgmm = mixture.BayesianGaussianMixture(n_components=gmm_component_num,
                                             covariance_type='full',
@@ -212,9 +222,9 @@ def uncertainty_test(model, input_var, heat_thresh, ax):
                                             weight_concentration_prior=None).fit(all_kps)
     plot_gmm(dpgmm, all_kps, ax)
 
-    print("debug: cov {}".format(dpgmm.covariances_))
-    print("debug: gmm {}".format(gmm_component_num))
-    print("active components: {}".format(np.sum(dpgmm.weights_ > 0.01)))
+    # print("debug: cov {}".format(dpgmm.covariances_))
+    # print("debug: gmm {}".format(gmm_component_num))
+    # print("active components: {}".format(np.sum(dpgmm.weights_ > 0.01)))
 
     #return gmm.means_, gmm.covariances_, gmm.weights_
 
@@ -279,11 +289,11 @@ def main():
     ps = parseHeatmap(hm[0], heat_thresh)
     canonical, pred, color, score = [], [], [], []
 
-    """mc dropout"""
-    # f1 = plt.figure()
-    # ax1 = f1.add_subplot(111)
-    # ax1.imshow(img)
-    # uncertainty_test(model, input_var, heat_thresh, ax1)
+    # mc dropout
+    f1 = plt.figure()
+    ax1 = f1.add_subplot(111)
+    ax1.imshow(img)
+    uncertainty_test(model, input_var, heat_thresh, ax1)
 
     for k in range(len(ps[0])):
         # camviewfeature
@@ -302,17 +312,17 @@ def main():
         cv2.circle(img, (ps[1][k] * 4, ps[0][k] * 4), 6, (0, 0, 255), -1)
         cv2.circle(img, (ps[1][k] * 4, ps[0][k] * 4), 2, (int(z*4), int(y*4), int(x*4)), -1)
     
-    #     """plot cov"""
-    #     pos = kps_mean[k]
-    #     covar = kps_cov[k]
-    #     draw_ellipse(pos, covar, ax1)
+        # plot cov
+        pos = kps_mean[k]
+        covar = kps_cov[k]
+        draw_ellipse(pos, covar, ax1)
 
-    # plt.show()
-    # plt.axis('off')
-    # ax1.get_xaxis().set_visible(False)
-    # ax1.get_yaxis().set_visible(False)
-    # f1.savefig('kp_cov.png', bbox_inches='tight', pad_inches = 0)
-    # plt.pause(5)
+    plt.show()
+    plt.axis('off')
+    ax1.get_xaxis().set_visible(False)
+    ax1.get_yaxis().set_visible(False)
+    f1.savefig('kp_cov.png', bbox_inches='tight', pad_inches = 0)
+    plt.pause(5)
 
     pred = np.array(pred).astype(np.float32)
     canonical = np.array(canonical).astype(np.float32)
@@ -331,16 +341,14 @@ def main():
     # nms is kp peask
     debugger.addImg(img, 'nms')
     
-    debugger.addPoint3D(canonical / outputRes - 0.5, c = color, marker = '^')
-    debugger.addPoint3D(pred / outputRes - 0.5, c = color, marker = 'x')
-    debugger.addPoint3D(rotated_pred / outputRes - 0.5, c = color, marker = '*')
+    # debugger.addPoint3D(canonical / outputRes - 0.5, c = color, marker = '^')
+    # debugger.addPoint3D(pred / outputRes - 0.5, c = color, marker = 'x')
+    # debugger.addPoint3D(rotated_pred / outputRes - 0.5, c = color, marker = '*')
 
-    debugger.showAllImg(pause = False)
-    debugger.show3D()
+    # debugger.showAllImg(pause = False)
+    # debugger.show3D()
 
     cv2.imwrite(det_name, img)
-
-
 
 if __name__ == '__main__':
     main()
