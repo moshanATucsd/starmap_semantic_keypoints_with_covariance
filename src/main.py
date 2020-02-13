@@ -220,10 +220,10 @@ def uncertainty_test(model, input_var, heat_thresh, ax):
 
 def main():
 
-    root = '/home/erl/moshan/other_stuff/starmap_semantic_keypoints/'
-    model_path = '/home/erl/moshan/orcvio_gamma/orcvio_gamma/pytorch_models/starmap/trained_models/no_dropout/model_cpu.pth'
-    img_path = root + 'images/car2.png'
-    det_name = root + 'det/car2.png'
+    # use the model trained with dropout enabled
+    model_path = '/home/erl/moshan/orcvio_gamma/orcvio_gamma/pytorch_models/starmap/trained_models/with_dropout/model_cpu.pth'
+    img_path = './images/car2.png'
+    det_name = './det/car2.png'
 
     # by default img size is 256
     inputRes = 256
