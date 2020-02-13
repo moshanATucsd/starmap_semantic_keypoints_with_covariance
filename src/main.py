@@ -164,7 +164,7 @@ def uncertainty_test(model, input_var, heat_thresh, ax):
     model.train()
     model.apply(set_dropout_to_train)
 
-    T = 100
+    T = 300
 
     all_kps = None
     gmm_component_num = 0
