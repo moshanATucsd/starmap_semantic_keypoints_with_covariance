@@ -1,6 +1,6 @@
 ## Readme 
 
-This repo demonstrates how to compute the covariances using MC dropout for the semantic keypoints in OrcVIO. 
+This repo demonstrates how to compute the covariances using MC dropout for the semantic keypoints in [OrcVIO](http://me-llamo-sean.cf/orcvio_githubpage/). 
 
 ### how to run 
 
@@ -30,7 +30,7 @@ python src/main.py
 run
 
 ```
-atom /Users/moshan/.virtualenvs/ece276a/lib/python3.6/site-packages/torch/serialization.py
+atom /lib/python3.6/site-packages/torch/serialization.py
 ```
 
 and modify the code in `_load`
@@ -41,7 +41,7 @@ unpickler.persistent_load = persistent_load
 result = unpickler.load()
 ```
 
-chnage to
+change to
 
 ```
 try:
@@ -66,3 +66,4 @@ for i in range(size // 2, det.shape[0] - size // 2):
     pool[i, j] = (max(det[i - 1, j - 1], det[i - 1, j], det[i - 1, j + 1],
                      det[i, j - 1], det[i, j], det[i, j + 1],
                      det[i + 1, j - 1], det[i + 1, j], det[i + 1, j + 1]))
+```
