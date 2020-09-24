@@ -2,13 +2,17 @@
 
 This repo demonstrates how to compute the covariances using MC dropout for the semantic keypoints in [OrcVIO](http://me-llamo-sean.cf/orcvio_githubpage/). 
 
+### how to train 
+
+- use [this repo](https://github.com/moshanATucsd/starmap_train_with_dropout)
+
 ### how to run 
 
 * modify the path 
 
 ```
     root = '/home/erl/moshan/other_stuff/star_map_semantic_keypoints/'
-    model_path = '/home/erl/moshan/orcvio_gamma/orcvio_gamma/pytorch_models/starmap/trained_models/no_dropout/model_cpu.pth'
+    model_path = '/home/erl/moshan/orcvio_gamma/orcvio_gamma/pytorch_models/starmap/trained_models/with_dropout/model_cpu.pth'
     img_path = root + 'images/car2.png'
     det_name = root + 'det/car2.png'
 ```
