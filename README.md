@@ -5,6 +5,7 @@ This repo demonstrates how to compute the covariances using MC dropout for the s
 ### how to train 
 
 - use [this repo](https://github.com/moshanATucsd/starmap_train_with_dropout)
+- pretrained weights are [here](https://github.com/moshanATucsd/orcvio_pytorch_models)
 
 ### how to run 
 
